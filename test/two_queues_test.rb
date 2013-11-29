@@ -12,7 +12,7 @@ class SchedulerTest < Test::Unit::TestCase
 
       # scheduler setup
       scheduler = TwoQueues::Scheduler.new
-      scheduler.for_job do |job|
+      scheduler.for_job do |jobs, job|
         job
       end
       scheduler.for_result do |result|
@@ -32,6 +32,19 @@ class SchedulerTest < Test::Unit::TestCase
     expected = Array.new(500).fill(["hello","hello","hello","hello","hello"])
 
     assert_equal expected, actual
+  end
+
+  def test_adding_jobs_from_within_a_job
+    scheduler = TwoQueues::Scheduler.new
+    scheduler.for_job do |jobs, job|
+      jobs << (job - 1) if job > 1
+      job.downto(1).to_a.inject(1){|s,o| s*o }
+    end
+    ary = []
+    scheduler.for_result{|result| ary << result }
+    scheduler.queue 5
+    scheduler.run
+    assert_equal [120, 24, 6, 2, 1], ary
   end
 
 end

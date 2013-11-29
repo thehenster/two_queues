@@ -41,7 +41,7 @@ module TwoQueues
       @workers = Array.new(@num_workers).map do |worker|
         Thread.new(@jobs, @results){|jobs, results|
           loop do
-            results << @for_job.call(jobs.pop)
+            results << @for_job.call(jobs, jobs.pop)
           end
         }
       end
