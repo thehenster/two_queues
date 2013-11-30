@@ -1,5 +1,5 @@
 require 'test/unit'
-require 'two_queues'
+require_relative '../lib/two_queues'
 
 class SchedulerTest < Test::Unit::TestCase
 
@@ -31,7 +31,7 @@ class SchedulerTest < Test::Unit::TestCase
 
     expected = Array.new(500).fill(["hello","hello","hello","hello","hello"])
 
-    assert_equal expected, actual
+    assert expected == actual, "#{expected.first.inspect} != #{actual.first.inspect}"
   end
 
   def test_adding_jobs_from_within_a_job
